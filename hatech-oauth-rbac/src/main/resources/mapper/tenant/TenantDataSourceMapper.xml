@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.tenant.mapper.ITenantDatasourceMapper">
+
+    <!-- 查询所有可用的数据源 -->
+    <select id="findAllUsableDataSource" resultType="cn.com.hatechframework.entity.oauth.server.vo.TenantDataSourceVO">
+        select * from tenant_datasource
+    </select>
+
+    <!-- 查询一个可用的数据源 -->
+    <select id="findOneUsableDataSource" resultType="cn.com.hatechframework.entity.oauth.server.vo.TenantDataSourceVO">
+        select * from tenant_datasource where tenant_name = #{tenantName}
+    </select>
+
+</mapper>

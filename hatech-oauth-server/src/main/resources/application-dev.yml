@@ -1,0 +1,134 @@
+# 服务端口配置
+server:
+  port: 8070
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    port: 8761
+    prefer-ip-address: true # 表示：将自己的ip注册到eureka
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # 以[IP地址:端口号]作为注册地址
+    # 表示eureka client间隔多久去拉取服务注册信息，默认为30秒，如果要迅速获取服务注册状态，可以缩小该值
+    lease-renewal-interval-in-seconds: 5
+    # 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+    # 默认为90秒
+    # 如果该值太大，则很可能将流量转发过去的时候，该instance已经不存活了。
+    # 如果该值设置太小了，则instance则很可能因为临时的网络抖动而被摘除掉。
+    # 该值至少应该大于 leaseRenewalIntervalInSeconds
+    lease-expiration-duration-in-seconds: 10
+
+  client:
+    registry-fetch-interval-seconds: 5 #新服务上线拉取eureka server服务注册信息频率，默认是30秒
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+
+# 服务名称配置(同时测名称也是注册到eureka中心的名称)
+spring:
+  application:
+    name: hatech-oauth-server
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 10000 #连接超时时间（毫秒）
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-wait: -1ms  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0 # 连接池中的最小空闲连接
+        max-idle: 8 # 连接池中的最大空闲连接
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/hatech-transaction?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&serverTimezone=GMT
+    username: root
+    password: 123456
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 5
+      maximum-pool-size: 12
+      idle-timeout: 300000
+      max-lifetime: 120000
+      auto-commit: true
+
+  # 配置用户登录使用的默认项
+  login:
+    client-id: ${spring.application.name}
+    client-secret: 123456
+    grant-type: password
+    scope: server
+
+security:
+  oauth2:
+    sign: hatech
+  validity:
+    access-token-seconds: 43200      # token有效期自定义设置，默认12小时  60 * 60 * 12  43200
+    refresh-token-seconds: 604800    # 默认30天，这里修改 60 * 60 * 24 * 7  604800
+
+# MyBatisPlus设置
+# mybatis-plus mapper xml 文件地址
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*/*Mapper.xml
+  # 以下配置均有默认值,可以不设置
+  global-config:
+    db-config:
+      #主键类 * AUTO: 数据库ID自增; INPUT: 用户输入ID; ID_WORKER: 全局唯一ID, Long类型的主键; ID_WORKER_STR: 字符串全局唯一ID; UUID: 全局唯一ID，UUID类型的主键; NONE: 该类型为未设置主键类型
+      id-type: ID_WORKER_STR
+  configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: true
+    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    call-setters-on-nulls: false
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  shareSecurityContext: true
+  command:
+    default:
+      circuitBreaker:
+        sleepWindowInMilliseconds: 5000 # 熔断多少秒后去尝试恢复请求，默认5000ms
+        forceClosed: true
+      execution:
+        timeout:
+          enabled: true #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+        isolation:
+          thread:
+            timeoutInMilliseconds: 8000 # 熔断器超时时间：默认1000ms
+
+# timeout.enabled=true时，# hystrix的超时时间要大于
+# 当MaxAutoRetries=1, MaxAutoRetriesNextServer=2时: RetryCount = (1+1) * (2+1) = 6次
+# 当MaxAutoRetries=0, MaxAutoRetriesNextServer=1时: RetryCount = (0+1) * (1+1) = 2次
+# 也就是: timeoutInMilliseconds = (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1) * ReadTimeout
+# https://blog.csdn.net/zzzgd_666/article/details/83314833
+
+ribbon:
+  ReadTimeout: 2000               # 请求处理的超时时间
+  ConnectTimeout: 1000            # 请求连接的超时时间
+  MaxAutoRetries: 1               # 重试策略先尝试访问首选实例一次,失败后才会更换实例访问
+  MaxAutoRetriesNextServer: 1     # 更换实例访问的次数：通过参数设置为2, 所以会尝试更换2次实例进行重试
+  OkToRetryOnAllOperations: true  # 开启对请求进行行重试
+
+# 监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+# 配置日志
+logging:
+  level:
+    cn.com.hatech: debug
+  file:
+    path: ./log/${spring.application.name}/${spring.application.name}.log
+

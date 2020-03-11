@@ -1,0 +1,47 @@
+
+/**
+ * @Method
+ * @Author Xincan
+ * @Version  1.0
+ * @Description  皮肤工具类
+ * @Return
+ * @Date 2019/3/24 11:05
+ */
+
+// 头部导航色系配置
+$hatech-header-color: #000000;                              // 系统头部背景颜色
+$hatech-header-logo-start-color: #23EFC9;                   // 系统头部logo开始渐变颜色
+$hatech-header-logo-end-color: #FF00B1;                     // 系统头部logo结束渐变颜色
+$hatech-header-hover-color: #1dc7bf;                        // 系统头部（一级菜单、按钮、下拉框等）鼠标悬浮、点击选中颜色
+
+// 左侧导航色系配置
+$hatech-left-nav-color: $hatech-header-color;               // 左侧导航背景颜色
+$hatech-left-nav-first-color: #246D66;                      // 左侧导航一级菜单颜色（包括选中颜色、滑过颜色）
+$hatech-left-nav-child-color: $hatech-header-hover-color;   // 左侧导航二级菜单颜色（包括选中颜色、滑过颜色）
+$hatech-left-nav-choose-color: #F5F5F5;                     // 左侧导航选中箭头颜色
+
+// 内容区域色系配置
+$hatech-content-color: $hatech-left-nav-choose-color;       // 系统主要内容区域背景颜色
+
+// 系统提示背景颜色配置
+$hatech-option-color: (
+  (name: success, color: #67C23A),                          // 成功操作颜色
+  (name: warning, color: #E6a23c),                          // 警告操作颜色
+  (name: danger,  color: #F98B8B),                          // 危险操作颜色
+  (name: info,    color: #8EB9F1)                           // 信息操作颜色
+);
+
+// 模块区域色系配置
+$system-color-font: #FFF;                                   // 系统字体颜色
+$system-color-header: #60C2DE;                              // 内容区域第一行菜单对应的标题颜色
+$system-color-panel-title: $hatech-header-hover-color;      // 内容块结构头部背景颜色
+$system-color-panel-border: $hatech-header-hover-color;     // 内容区域线条边框颜色
+
+
+// 表格色系配置
+$table-border-color: #EBEEF5;                               // 表格边框颜色
+$table-icon-color: #5BBBBB;                                 // 表格操作按钮颜色
+$table-icon-hover-color: #4686B5;                           // 表格操作按钮悬浮颜色
+$table-first-line-color: #F9F9F9;                           // 表格第一行（列头）背景颜色
+$hatech-line-color: #F1EFEF;                                // 表格弹出层头部（下边框），底部（上边框）边框颜色
+

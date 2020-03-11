@@ -1,0 +1,33 @@
+
+@import "theme/theme";
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 修改elementui checkbox 样式
+ * @Date 2019/3/13 13:44
+ */
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+    background-color: $table-icon-color;
+    border-color: $table-icon-color;
+}
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: $table-icon-color;
+}
+
+.el-popover .el-checkbox {
+    margin-right: 0px;
+    width: 50%;
+}
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 修改消息提示弹出框样式
+ * @Date 2019/3/13 13:45
+ */
+.el-message {
+    min-width: 150px;
+    top: calc(100% / 2 - 15px * 2) !important;
+}

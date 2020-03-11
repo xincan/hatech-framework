@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.role.mapper.IRoleMapper">
+
+    <resultMap id="BaseResultMap" type="cn.com.hatechframework.entity.oauth.rbac.vo.RoleVO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="edit_user_id" jdbcType="VARCHAR" property="editUserId"/>
+        <result column="edit_time" jdbcType="TIMESTAMP" property="editTime"/>
+        <collection property="menuIds" column="id" select="findRoleMenuIds"></collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select id, role_name, status, description, edit_user_id, edit_time from role
+        <where>
+            <if test="params.roleName != null and params.roleName != ''">
+                and role_name like concat('%',#{params.roleName},'%')
+            </if>
+            <if test="params.roleGroupId != null and params.roleGroupId != ''">
+                and id in (select distinct role_id from role_group_role where role_group_id = #{params.roleGroupId})
+            </if>
+        </where>
+        order by edit_time desc
+    </select>
+
+    <select id="findRoleByName" resultType="cn.com.hatechframework.server.role.po.RolePO">
+        select * from role where role_name = #{roleName}
+    </select>
+
+    <select id="findRoleMenuIds" resultType="java.lang.String">
+        select
+            (CASE when operation_id is not null then
+                concat(menu_id,'-',IFNULL(operation_id,''))
+            else
+                menu_id
+            end) menuOperationId
+        from role_menu_operation where role_id = #{id}
+    </select>
+
+    <delete id="deleteRoleMenuByRoleId">
+        delete from role_menu_operation where role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteRoleMenuByRoleIds">
+        delete from role_menu_operation where role_id in
+        <foreach item="roleId" collection="roleIdList" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+
+    <select id="findRoleByNames" resultType="cn.com.hatechframework.server.role.po.RolePO">
+        select * from role where role_name in
+        <foreach item="roleId" collection="list" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <select id="findRoleMenuOperationByRoles" resultType="cn.com.hatechframework.server.role.po.RoleMenuOperationPO">
+        select * from role_menu_operation where role_id in
+        <foreach item="roleId" collection="list" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <update id="updateStatusById">
+        update role set status = ABS(status - 1)  where id = #{id}
+    </update>
+</mapper>

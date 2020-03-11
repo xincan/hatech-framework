@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.mapper.user.IUserMapper">
+
+    <!-- 租户表 -->
+    <resultMap id="TenantMap" type="cn.com.hatechframework.server.po.TenantPO">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="tenant_name" jdbcType="VARCHAR" property="tenantName" />
+    </resultMap>
+
+    <select id="findTenantByUsername" resultMap="TenantMap">
+        select t2.id, t2.tenant_name
+            from tenant_user t1
+            left join tenant t2
+            on t1.tenant_id = t2.id
+            where t1.username = #{username}
+    </select>
+
+</mapper>

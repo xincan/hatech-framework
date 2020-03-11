@@ -1,0 +1,18 @@
+/**
+ * @Method
+ * @Author Xincan
+ * @Version  1.0
+ * @Description  函数工具类
+ * @Return
+ * @Date 2019/3/24 11:05
+ */
+
+
+
+@function floatFn($fl) {
+  @if($fl == left) {
+    @return right;
+  }
+  @return left;
+}
+

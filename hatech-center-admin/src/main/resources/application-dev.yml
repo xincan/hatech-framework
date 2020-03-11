@@ -1,0 +1,43 @@
+
+server:
+  port: 8050
+
+spring:
+  application:
+    name: hatech-center-admin
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    port: 8761
+    prefer-ip-address: true # 表示：将自己的ip注册到eureka
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # 以[IP地址:端口号]作为注册地址
+    # 表示eureka client间隔多久去拉取服务注册信息，默认为30秒，如果要迅速获取服务注册状态，可以缩小该值
+    lease-renewal-interval-in-seconds: 5
+    # 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+    # 默认为90秒
+    # 如果该值太大，则很可能将流量转发过去的时候，该instance已经不存活了。
+    # 如果该值设置太小了，则instance则很可能因为临时的网络抖动而被摘除掉。
+    # 该值至少应该大于 leaseRenewalIntervalInSeconds
+    lease-expiration-duration-in-seconds: 10
+
+  client:
+    registry-fetch-interval-seconds: 5 #新服务上线拉取eureka server服务注册信息频率，默认是30秒
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+
+# 监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    cn.com.hatechframework: debug
+  file:
+    path: ./log/${spring.application.name}/${spring.application.name}.log

@@ -1,0 +1,207 @@
+server:
+  port: 8015
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    port: 8761
+    prefer-ip-address: true # 表示：将自己的ip注册到eureka
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # 以[IP地址:端口号]作为注册地址
+    # 表示eureka client间隔多久去拉取服务注册信息，默认为30秒，如果要迅速获取服务注册状态，可以缩小该值
+    lease-renewal-interval-in-seconds: 5
+    # 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+    # 默认为90秒
+    # 如果该值太大，则很可能将流量转发过去的时候，该instance已经不存活了。
+    # 如果该值设置太小了，则instance则很可能因为临时的网络抖动而被摘除掉。
+    # 该值至少应该大于 leaseRenewalIntervalInSeconds
+    lease-expiration-duration-in-seconds: 10
+
+  client:
+    registry-fetch-interval-seconds: 5 #新服务上线拉取eureka server服务注册信息频率，默认是30秒
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  shareSecurityContext: true
+  command:
+    default:
+      circuitBreaker:
+        sleepWindowInMilliseconds: 5000 # 熔断多少秒后去尝试恢复请求，默认5000ms
+        forceClosed: true
+      execution:
+        timeout:
+          enabled: true #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+        isolation:
+          thread:
+            timeoutInMilliseconds: 8000 # 熔断器超时时间：默认1000ms
+
+# timeout.enabled=true时，# hystrix的超时时间要大于
+# 当MaxAutoRetries=1, MaxAutoRetriesNextServer=2时: RetryCount = (1+1) * (2+1) = 6次
+# 当MaxAutoRetries=0, MaxAutoRetriesNextServer=1时: RetryCount = (0+1) * (1+1) = 2次
+# 也就是: timeoutInMilliseconds = (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1) * ReadTimeout
+
+
+# https://blog.csdn.net/zzzgd_666/article/details/83314833
+
+ribbon:
+  ReadTimeout: 6000               # 请求处理的超时时间
+  ConnectTimeout: 3000            # 请求连接的超时时间
+  MaxAutoRetries: 1               # 重试策略先尝试访问首选实例一次,失败后才会更换实例访问
+  MaxAutoRetriesNextServer: 1     # 更换实例访问的次数：通过参数设置为2, 所以会尝试更换2次实例进行重试
+  OkToRetryOnAllOperations: true  # 开启对请求进行行重试
+
+
+spring:
+  application:
+    name: hatech-oauth-rbac
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 10000 #连接超时时间（毫秒）
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-wait: -1ms  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0 # 连接池中的最小空闲连接
+        max-idle: 8 # 连接池中的最大空闲连接
+
+  cloud:
+    alibaba:
+      seata:
+        # 配置分布式事务的分组名称
+        tx-service-group: raw-jdbc-group
+
+  datasource:
+    name: main-datasource
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/hatech-transaction?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&serverTimezone=GMT
+      username: root
+      password: 123456
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 30
+      idle-timeout: 30000
+      max-lifetime: 120000
+      auto-commit: true
+      connection-test-query: SELECT 1
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  # 以下配置均有默认值,可以不设置
+  global-config:
+    db-config:
+      #主键类 * AUTO: 数据库ID自增; INPUT: 用户输入ID; ID_WORKER: 全局唯一ID, Long类型的主键; ID_WORKER_STR: 字符串全局唯一ID; UUID: 全局唯一ID，UUID类型的主键; NONE: 该类型为未设置主键类型
+      id-type: ID_WORKER_STR
+      #字段策略 IGNORED:"忽略判断"  NOT_NULL:"非 NULL 判断")  NOT_EMPTY:"非空判断"
+      field-strategy: NOT_EMPTY
+      #数据库类型
+      db-type: MYSQL
+  configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: true
+    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    call-setters-on-nulls: false
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 鉴权配置
+security:
+  oauth2:
+    server:
+      clientId: hatech-oauth-server
+      clientSecret: 123456
+      grant-type: password
+      scope: server
+    client:
+      clientId: ${spring.application.name}
+      clientSecret: 123456
+      user-authorization-uri: http://127.0.0.1:8040/api/oauth/oauth/authorize   # 获取code
+      access-token-uri: http://127.0.0.1:8040/api/oauth/oauth/token             # 获取token
+      grant-type: client_credentials,refresh_token,password
+      scope: server
+    resource:
+      id: hatech-oauth-server #认证中心clientId
+      token-info-uri: http://127.0.0.1:8040/api/oauth/authentication/check_token
+      user-info-uri: http://127.0.0.1:8040/api/oauth/authentication/principal           # 根据Token获取用户信息
+    authorization:
+      check-token-access: http://127.0.0.1:8040/api/oauth/authentication/check_token
+
+# 监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+# seata 配置
+seata:
+  enabled: true
+  enableAutoDataSourceProxy: false
+  # 事务分组
+  tx-service-group: fsp_tx_group
+
+  registry:
+    type: eureka
+    eureka:
+      application: hatech-seata-server
+      weight: 1
+      service-url: ${eureka.client.service-url.defaultZone}
+
+  transport:
+    type: TCP
+    server: NIO
+    heartbeat: true
+    thread-factory:
+      boss-thread-prefix: NettyBoss
+      worker-thread-prefix: NettyServerNIOWorker
+      server-executor-thread-prefix: NettyServerBizHandler
+      share-boss-worker: false
+      client-selector-thread-prefix: NettyClientSelector
+      client-selector-thread-size: 1
+      client-worker-thread-prefix: NettyClientWorkerThread
+      boss-thread-size: 1
+      worker-thread-size: 8
+    shutdown:
+      wait: 3
+    serialization: seata
+    compressor: none
+
+  service:
+    # 事务群组
+    vgroup-mapping:
+      fsp_tx_group: hatech-seata-server
+    # TC服务列表
+    grouplist:
+      hatech-seata-server: 127.0.0.1:8091
+    enable-degrade: false
+    disable-global-transaction: false
+
+  client:
+    rm:
+      async-commit-buffer-limit: 10000
+      table-meta-check-enable: false
+      lock:
+        retry-times: 30
+        retry-interval: 10
+      report-retry-count: 5
+    undo:
+      log-table: seata_log
+      data-validation: true
+
+logging:
+  level:
+    cn.com.hatechframework: debug
+  file:
+    path: ./log/${spring.application.name}/${spring.application.name}.log
+

@@ -1,0 +1,71 @@
+server:
+  port: 8040
+
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    port: 8761
+    prefer-ip-address: true # 表示：将自己的ip注册到eureka
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # 以[IP地址:端口号]作为注册地址
+    # 表示eureka client间隔多久去拉取服务注册信息，默认为30秒，如果要迅速获取服务注册状态，可以缩小该值
+    lease-renewal-interval-in-seconds: 5
+    # 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+    # 默认为90秒
+    # 如果该值太大，则很可能将流量转发过去的时候，该instance已经不存活了。
+    # 如果该值设置太小了，则instance则很可能因为临时的网络抖动而被摘除掉。
+    # 该值至少应该大于 leaseRenewalIntervalInSeconds
+    lease-expiration-duration-in-seconds: 10
+
+  client:
+    registry-fetch-interval-seconds: 5 #新服务上线拉取eureka server服务注册信息频率，默认是30秒
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+
+# 监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  application:
+    name: hatech-center-gateway
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 10000 #连接超时时间（毫秒）
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-wait: -1ms  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0 # 连接池中的最小空闲连接
+        max-idle: 8 # 连接池中的最大空闲连接
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          #开启小写验证，默认feign根据服务名查找都是用的全大写
+          lowerCaseServiceId: true
+
+      routes:
+        - id: hatech-oauth-server
+          uri: lb://${spring.cloud.gateway.routes[0].id}
+          predicates:
+            - Path=/api/oauth/**
+          filters:
+            - StripPrefix=2
+        - id: hatech-oauth-rbac
+          uri: lb://${spring.cloud.gateway.routes[1].id}
+          predicates:
+            - Path=/api/rbac/**
+          filters:
+            - StripPrefix=2

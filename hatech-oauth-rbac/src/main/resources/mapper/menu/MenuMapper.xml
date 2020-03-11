@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.menu.mapper.IMenuMapper">
+
+    <resultMap id="BaseResultMap" type="cn.com.hatechframework.server.menu.vo.MenuVO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="menu_name" jdbcType="VARCHAR" property="menuName"/>
+        <result column="parentMenuName" jdbcType="VARCHAR" property="parentMenuName"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="params" jdbcType="VARCHAR" property="params"/>
+        <result column="level" jdbcType="INTEGER" property="level"/>
+        <result column="order_info" jdbcType="INTEGER" property="orderInfo"/>
+        <result column="edit_user_id" jdbcType="VARCHAR" property="editUserId"/>
+        <result column="edit_time" jdbcType="TIMESTAMP" property="editTime"/>
+        <collection property="operationIds"  column="id" select="findMenuOperationIds" ofType="java.lang.String">
+        </collection>
+    </resultMap>
+
+    <!-- 根据账号查询用户信息 -->
+    <select id="findPage" resultMap="BaseResultMap">
+        SELECT a.id,a.menu_name,a.path,a.code,a.parent_id,a.icon,a.params,a.`level`,a.order_info,a.edit_user_id,a.edit_time,
+        IFNULL((select menu_name from menu where id = a.parent_id),'根节点') parentMenuName
+        from menu a
+		<where>
+            <if test="params.menuName != null and params.menuName != ''">
+                and a.menu_name like concat('%',#{params.menuName},'%')
+            </if>
+            <if test="params.path != null and params.path != ''">
+                and a.path like concat('%',#{params.path},'%')
+            </if>
+            <if test="params.parentId != null and params.parentId != ''">
+                and ( a.parent_id = #{params.parentId} or a.id = #{params.parentId})
+            </if>
+        </where>
+        order by a.level, a.order_info
+    </select>
+
+    <select id="findMenuOperationIds" resultType="java.lang.String">
+        select distinct operation_id from menu_operation where menu_id = #{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.hatechframework.server.menu.vo.MenuVO">
+        SELECT a.id,a.menu_name,a.path,a.code,a.parent_id,a.icon,a.params,a.`level`,a.order_info,a.edit_user_id,a.edit_time,
+        IFNULL((select menu_name from menu where id = a.parent_id),'根节点') parentMenuName
+        from menu a
+        <where>
+            <if test="params.menuName != null and params.menuName != ''">
+                and a.menu_name like concat('%',#{params.menuName},'%')
+            </if>
+            <if test="params.path != null and params.path != ''">
+                and a.path like concat('%',#{params.path},'%')
+            </if>
+            <if test="params.parentId != null and params.parentId != ''">
+                and a.parent_id = #{params.parentId}
+            </if>
+        </where>
+        order by a.order_info
+    </select>
+
+    <select id="findUserMenu" resultType="cn.com.hatechframework.server.menu.vo.MenuVO">
+        SELECT distinct a.id,a.menu_name,a.path,a.code,a.parent_id,a.icon,a.params,a.`level`,a.order_info,a.edit_user_id,a.edit_time
+        from menu a,role_menu_operation b where a.id = b.menu_id
+        and b.role_id in
+        <foreach item="roleId" collection="roleIdList" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        order by a.order_info
+    </select>
+
+    <select id="findUserButtonByParentId" resultType="cn.com.hatechframework.server.operation.vo.OperationVO">
+        SELECT distinct a.id,a.operation_name,a.code,a.icon,a.`type`,a.order_info,a.edit_user_id,a.edit_time
+        from operation a,role_menu_operation b where a.id = b.operation_id
+        and b.role_id in
+        <foreach item="roleId" collection="roleIdList" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        and b.menu_id = #{parentId}
+        order by a.order_info
+    </select>
+
+    <select id="findPermissionTree" resultType="cn.com.hatechframework.server.menu.vo.MenuOperationTreeVo">
+        select * from (
+        (SELECT id,id as menu_id,'' operation_id, menu_name as name,parent_id,'' type FROM menu ORDER BY order_info)
+        UNION all
+        (
+        SELECT '' as id,a.menu_id,a.operation_id,b.operation_name as name,a.menu_id parent_id,b.type
+        FROM menu_operation a
+        LEFT JOIN operation b on a.operation_id = b.id
+        ORDER BY b.order_info
+        )) a
+    </select>
+
+    <select id="findMenuByRoles" resultType="cn.com.hatechframework.server.menu.po.MenuPO">
+        select * from menu where id in (
+            select menu_id from role_menu_operation where role_id in
+           <foreach item="roleId" collection="list" open="(" separator="," close=")">
+                #{roleId}
+           </foreach>
+        )
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO menu (
+        `id`,
+        `menu_name`,
+        `path`,
+        `code`,
+        `parent_id`,
+        `icon`,
+        `params`,
+        `level`,
+        `order_info`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            #{item.id},
+            #{item.menuName},
+            #{item.path},
+            #{item.code},
+            #{item.parentId},
+            #{item.icon},
+            #{item.params},
+            #{item.level},
+            #{item.orderInfo}
+            )
+        </foreach>
+    </insert>
+</mapper>

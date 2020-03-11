@@ -1,0 +1,42 @@
+
+server:
+  port: 8761
+
+spring:
+  application:
+    name: hatech-center-eureka
+
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: ${eureka.instance.hostname}:${server.port} # 以[IP地址:端口号]作为注册地址
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    metadata-map.zone: zone1
+  client:
+    service-url:
+      zone1: http://${eureka.instance.hostname}:8761/eureka/
+      zone2: http://${eureka.instance.hostname}:8762/eureka/
+    register-with-eureka: true #默认为true，设置为false，仅作为服务中心，不作为服务客户端
+    fetch-registry: true #默认为true，设置为false， 不从服务中心检索注册的服务
+    region: region-east
+    availability-zones:
+      region-east: zone1,zone2
+
+  server:
+    eviction-interval-timer-in-ms: 5000 #清理间隔（单位毫秒， 默认是60*1000）
+    enable-self-preservation: false #默认为true，设置为false，关闭自我保护
+    #指定每分钟需要收到的续约次数阈值，默认是0.85
+    renewal-percent-threshold: 0.49
+    response-cache-auto-expiration-in-seconds: 10 # 默认是180，调整缓存过期更新时间
+    wait-time-in-ms-when-sync-empty: 0
+    use-read-only-response-cache: false
+
+
+logging:
+  level:
+    cn.com.hatechframework: debug
+  file:
+    path: ./log/${spring.application.name}/${spring.application.name}.log
+

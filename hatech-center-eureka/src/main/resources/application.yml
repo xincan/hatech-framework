@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev # 当前设置开发环境
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

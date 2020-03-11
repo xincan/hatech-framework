@@ -1,0 +1,152 @@
+
+/**
+ * @Method
+ * @Author Xincan
+ * @Version  1.0
+ * @Description  混合器工具类
+ * @Return
+ * @Date 2019/3/24 11:05
+ */
+
+@import "../theme/theme";
+@import "../function/function";
+
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 边框圆角设置
+ * @Date 2019/3/13 13:36
+ */
+@mixin hatech-logo-color(){
+  background: -webkit-linear-gradient(0deg, $hatech-header-logo-start-color 0%, $hatech-header-logo-end-color 100%);
+  background: -moz-linear-gradient(0deg, $hatech-header-logo-start-color 0%, $hatech-header-logo-end-color 100%);
+  background: -o-linear-gradient(0deg, $hatech-header-logo-start-color 0%, $hatech-header-logo-end-color 100%);
+  background: -ms-linear-gradient(0deg, $hatech-header-logo-start-color 0%, $hatech-header-logo-end-color 100%);
+  background: linear-gradient(90deg, $hatech-header-logo-start-color 0%, $hatech-header-logo-end-color 100%);
+}
+
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 动画效果
+ * @Date 2019/3/13 13:36
+ */
+@mixin hatech-transition($trans){
+  -webkit-transition: max-height $trans;
+  -moz-transition: max-height $trans;
+  -o-transition: max-height $trans;
+  -ws-transition: max-height $trans;
+  transition: max-height $trans;
+}
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 边框圆角设置
+ * @Date 2019/3/13 13:36
+ */
+@mixin box-border-radius($num:4px){
+  -webkit-border-radius: $num;
+  -o-border-radius: $num;
+  -moz-border-radius: $num;
+  -ws-border-radius: $num;
+  border-radius: $num;
+}
+
+/**
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 盒子边框设置
+ * @Date 2019/3/13 13:36
+ */
+@mixin box-border-sizing(){
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ws--box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/**
+ * @Method 表格数据格式化
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 表格数据列单元格数据样式化，
+ * @Date 2019/3/13 13:36
+ */
+@mixin table-data-formatter($cur){
+  cursor: $cur;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color:white;
+  @include box-border-radius(4px);
+}
+
+/**
+ * @Method 表格头部操作按钮位置
+ * @Author Xincan
+ * @Version  1.0
+ * @Description 分为左边存放和右边存放
+ * @Date 2019/3/13 13:36
+ */
+@mixin table-header-option-align($direction) {
+  width: calc(49% - 5px);
+  float: $direction;
+  @if($direction == left){
+    padding-left: 5px;
+  }
+  @if($direction == right){
+    padding-right: 5px;
+  }
+  & > ul {
+    float: $direction;
+    & > li {
+      float: left;
+      padding: 9px 5px;
+      & i,
+      & span /deep/ .el-dialog__headerbtn i{
+        font-size: 18px;
+        color: $table-icon-color;
+        cursor: pointer;
+        &:hover {
+          color: $table-icon-hover-color;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @Method 表格行内按钮操作
+ * @Author Xincan
+ * @Version  1.0
+ * @param $fl 浮动方向（left, right）
+ * @Description 开启关闭按钮
+ * @Date 2019/3/13 13:36
+ */
+@mixin hatech-fmt-is-enable($fl){
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  text-align: floatFn($fl);
+  width: 45px;
+  color: #fff;
+  height: 20px;
+  line-height: 22px;
+  border-radius: 10px;
+  vertical-align: middle;
+  padding-#{floatFn($fl)}: 6px;
+  &::after {
+    content:"";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 9px;
+    background-color: #fff;
+    position: absolute;
+    #{$fl}: 2px;
+    top: 2px;
+  }
+}

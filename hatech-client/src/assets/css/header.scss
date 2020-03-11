@@ -1,0 +1,108 @@
+
+/**
+ * 导入函数工具类
+ */
+@import "mixin/mixin";
+
+#header{
+
+    & .active {
+        background: $hatech-header-hover-color;
+    }
+
+    display: inline-flex;
+    flex-direction: row;
+    position: fixed;
+    z-index: 9999999;
+    top:0;
+    left: 0;
+    font-size: 14px;
+    color: white;
+    width:100%;
+    height: 40px;
+    line-height: 40px;
+    background: $hatech-header-color;
+
+    & .header-right ul,
+    & .header-center ul{
+        padding: 0;
+        margin: 0;
+        & li{
+            padding: 0;
+            list-style: none;
+            float: left;
+            cursor: pointer;
+        }
+    }
+    // 头部左侧样式
+    & .header-left {
+        width: 20%;
+        & > span{
+            @include hatech-logo-color();
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-left: 10px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    }
+    // 头部中间样式
+    & .header-center {
+        width: 55%;
+        line-height: 40px;
+        text-align: center;
+        & ul li {
+            padding: 0 10px;
+            margin-left: 1px;
+            & > a {
+                color: white;
+                text-decoration: none;
+            }
+            &:hover {
+                background: $hatech-header-hover-color;
+            }
+        }
+    }
+    // 头部右侧样式
+    & .header-right {
+        width: 25%;
+        & ul{
+            float: right;
+            clear: left;
+            & li:nth-child(2),
+            & li:nth-child(3) {
+                padding: 0 10px;
+                &:hover {
+                    background: $hatech-header-hover-color;
+                }
+            }
+        }
+        // 修改elementui select 样式
+        & /deep/ {
+            .el-select {
+              & input {
+                  font-size: 14px;
+                  width: 110px;
+                  background: $hatech-header-color;
+                  border: none;
+                  border-radius: 0;
+                  color: white;
+                  padding-left: 10px!important;
+                  &:hover{
+                      background: $hatech-header-hover-color;
+                  }
+              }
+              & .el-input {
+                  & .el-select__caret {
+                      color: white;
+                      padding: 0 5px;
+                  }
+              }
+              & .el-select-dropdown__item.selected {
+                  color: $hatech-header-hover-color;
+                  font-weight: bold;
+              }
+            }
+        }
+    }
+}

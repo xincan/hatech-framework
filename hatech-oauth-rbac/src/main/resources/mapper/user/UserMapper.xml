@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.user.mapper.IUserMapper">
+
+    <resultMap id="BaseResultMap" type="cn.com.hatechframework.entity.oauth.rbac.vo.UserVO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="is_admin" jdbcType="INTEGER" property="isAdmin"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="is_tenant" jdbcType="INTEGER" property="isTenant"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="organization_id" jdbcType="VARCHAR" property="organizationId"/>
+        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+        <result column="edit_user_id" jdbcType="VARCHAR" property="editUserId"/>
+        <result column="edit_time" jdbcType="TIMESTAMP" property="editTime"/>
+        <!-- 角色表role -->
+        <collection property="authorities" ofType="cn.com.hatechframework.entity.oauth.rbac.vo.RoleVO">
+            <id column="role_id" jdbcType="VARCHAR" property="id"/>
+            <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="UserRoleMap" type="cn.com.hatechframework.server.user.vo.UserRoleVO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="is_admin" jdbcType="INTEGER" property="isAdmin"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="is_tenant" jdbcType="INTEGER" property="isTenant"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="organization_id" jdbcType="VARCHAR" property="organizationId"/>
+        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+        <result column="edit_user_id" jdbcType="VARCHAR" property="editUserId"/>
+        <result column="edit_time" jdbcType="TIMESTAMP" property="editTime"/>
+    </resultMap>
+
+    <resultMap id="RoleMap" type="cn.com.hatechframework.server.user.vo.UserRoleVO">
+        <id column="user_id" jdbcType="VARCHAR" property="id"/>
+        <collection property="roleList" ofType="cn.com.hatechframework.entity.oauth.rbac.vo.RoleVO">
+            <id column="role_id" jdbcType="VARCHAR" property="id" />
+            <id column="role_name" jdbcType="VARCHAR" property="roleName" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="RoleGroupMap" type="cn.com.hatechframework.server.user.vo.UserRoleVO">
+        <id column="user_id" jdbcType="VARCHAR" property="id"/>
+        <collection property="roleGroupList" ofType="cn.com.hatechframework.server.role.vo.RoleGroupVO">
+            <id column="role_group_id" jdbcType="VARCHAR" property="id" />
+            <id column="role_group_name" jdbcType="VARCHAR" property="roleGroupName" />
+        </collection>
+    </resultMap>
+
+    <!-- 根据账号查询用户信息 -->
+    <select id="findUserByUsername" resultMap="BaseResultMap">
+        select DISTINCT t.id, t.password,t.username,t.name,t.phone,t.email,
+                        t.status,t.is_tenant,t.company,t.code,t.area_id,t.organization_id,
+                        s.id role_id, s.role_name
+        from (
+                 select user.id, user.password,user.username,user.name, user.phone, user.email,
+                        user.status,user.is_tenant,user.company,user.code,user.area_id,user.organization_id,
+                        ur.role_id from user
+                 left join user_role ur on user.id = ur.user_id
+                 where user.username = #{username}
+                 union all
+                 select user.id, user.password,user.username,user.name, user.phone, user.email,
+                        user.status,user.is_tenant,user.company,user.code,user.area_id,user.organization_id,
+                        ur.role_id from user
+                 left join (
+                     select r.user_id, g.role_id from role_group
+                        left join role_group_user r on role_group.id = r.role_group_id
+                        left join role_group_role g on role_group.id = g.role_group_id
+                     where role_group.status = 1
+                 ) ur
+                 on user.id = ur.user_id
+                 where user.username = #{username}
+        ) t left join (
+            select id, role_name from role where status = 1
+        ) s on t.role_id = s.id
+    </select>
+
+    <select id="findAll" resultMap="UserRoleMap">
+        select DISTINCT id, username, password, name, phone, email, is_admin, status, is_tenant, organization_id, organization_name,
+                        edit_time
+        from user_role_view
+        <where>
+            <if test="params.name != null and params.name != ''">
+                and name like concat('%',#{params.name},'%')
+            </if>
+            <if test="params.username != null and params.username != ''">
+                and username like concat('%',#{params.username},'%')
+            </if>
+            <if test="params.phone != null and params.phone != ''">
+                and phone like concat('%',#{params.phone},'%')
+            </if>
+            <if test="params.status != null">
+                and status = #{params.status}
+            </if>
+            <if test="params.organizationId != null and params.organizationId != ''">
+                and FIND_IN_SET(organization_id, getOrgCList(#{params.organizationId}))
+            </if>
+            <if test="params.roleId != null and params.roleId != ''">
+                and role_id = #{params.roleId}
+            </if>
+            <if test="params.roleGroupId != null and params.roleGroupId != ''">
+                and role_group_id = #{params.roleGroupId}
+            </if>
+        </where>
+        order by edit_time desc
+    </select>
+
+    <select id="findUserRole" resultMap="RoleMap">
+        select t1.user_id, t1.role_id, t2.role_name
+        from user_role t1
+             left join role t2 on t1.role_id = t2.id
+        where t1.user_id in
+        <foreach collection="list" open="(" close=")" separator="," item="p">
+            #{p}
+        </foreach>
+    </select>
+
+    <select id="findUserRoleGroup" resultMap="RoleGroupMap">
+        select t1.user_id, t1.role_group_id, t2.role_group_name
+        from role_group_user t1
+            left join role_group t2 on t1.role_group_id = t2.id
+        where t1.user_id in
+        <foreach collection="list" open="(" close=")" separator="," item="p">
+            #{p}
+        </foreach>
+    </select>
+
+    <update id="enableUser">
+        update user set status = ABS(status - 1)  where id = #{userId}
+    </update>
+
+    <update id="resetPassword">
+        update user set password = #{password} where id = #{userId}
+    </update>
+
+    <select id="findUserPassword" resultType="String">
+        select password from user where id = #{userId}
+    </select>
+
+    <update id="changePassword">
+        update user set password = #{password} where id = #{userId}
+    </update>
+
+</mapper>

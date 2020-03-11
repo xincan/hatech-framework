@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.hatechframework.server.menu.mapper.IMenuOperationMapper">
+
+	<resultMap id="BaseResultMap" type="cn.com.hatechframework.server.menu.vo.MenuOperationVO">
+		<id column="id" jdbcType="VARCHAR" property="id"/>
+		<result column="menu_id" jdbcType="VARCHAR" property="menuId"/>
+		<result column="operation_id" jdbcType="VARCHAR" property="operationId"/>
+	</resultMap>
+	
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			`id`, 
+			`menu_id`, 
+			`operation_id`
+		FROM
+			menu_operation
+		ORDER BY
+			id DESC
+	</select>
+
+	<delete id="deleteMenuOperation">
+		delete from menu_operation where menu_id = #{menuId} and operation_id in
+		<foreach item="operationId" collection="operationIdList" open="(" separator="," close=")">
+			#{operationId}
+		</foreach>
+	</delete>
+
+	<select id="findRelationOperationIds" resultType="java.lang.String">
+		SELECT
+			`operation_id`
+		FROM
+			menu_operation
+		where menu_id = #{menuId}
+	</select>
+
+
+	<select id="findMenuOperationByRoles" resultType="cn.com.hatechframework.server.menu.po.MenuOperationPO">
+		select distinct id,menu_id,operation_id from role_menu_operation where operation_id is not null and role_id in
+		<foreach item="roleId" collection="list" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</select>
+
+	<insert id="batchInsert">
+		INSERT INTO menu_operation (
+		`id`,
+		`menu_id`,
+		`operation_id`
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.id},
+			#{item.menuId},
+			#{item.operationId}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

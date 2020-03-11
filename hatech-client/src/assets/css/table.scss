@@ -1,0 +1,120 @@
+
+/**
+ * 导入函数工具类
+ */
+@import "mixin/mixin";
+
+.hatech-plugin-table {
+
+    & .hatech-search {
+        margin: 5px;
+        padding: 10px;
+        background: white;
+        border: 1px solid $table-border-color;
+        clear: left;
+        & /deep/ .el-form{
+            & .el-input__inner {
+                width: 160px;
+                height: 35px;
+                line-height: 35px;
+                padding: 0 5px;
+            }
+            & .el-form-item {
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    & .hatech-table {
+        margin: 5px;
+        padding: 0;
+        clear: left;
+        & .hatech-table-header {
+            display: block;
+            width: calc(100% - 2px);
+            border: 1px solid $table-border-color;
+            background: white;
+            float: left;
+            & div > ul {
+                padding: 0;
+                margin: 0;
+                & > li {
+                    position: relative;
+                    padding: 0;
+                    margin: 0;
+                    list-style: none;
+                }
+            }
+
+            & .hatech-table-header-left{
+                @include table-header-option-align(left);
+            }
+            & .hatech-table-header-right{
+                @include table-header-option-align(right);
+            }
+        }
+
+        & .hatech-table-body {
+            border: 1px solid $table-border-color;
+            & /deep/ .el-table {
+                width: calc(100% - 2px)!important;
+                left: 1px;
+                top: 1px;
+                margin-bottom: 2px;
+                & th{
+                  background-color: $table-first-line-color;
+                }
+                & td, & th {
+                    padding: 3px 0;
+                }
+                & td, & th.is-leaf {
+                    border-bottom: 1px solid $table-border-color;
+                }
+                & .caret-wrapper {
+                    width: 10px;
+                    height: 30px;
+                    & .sort-caret.ascending {
+                        top: 2px;
+                    }
+                    & .sort-caret.descending {
+                        bottom: 5px;
+                    }
+                }
+                & .descending .sort-caret.descending {
+                    border-top-color: $table-icon-color;
+                }
+                & i{
+                    position: relative;
+                    top: 4px;
+                    cursor: pointer;
+                    font-size: 18px;
+                    color: $table-icon-color;
+                    margin-right: 5px;
+                }
+                & .table-icon{
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        & .hatech-table-footer {
+            display: block;
+            width: calc(100% - 2px - 30px * 2);
+            border: 1px solid $table-border-color;
+            border-top: none;
+            padding: 5px 30px;
+            background: white;
+            overflow: hidden;
+            & /deep/ {
+                & .el-pagination.is-background {
+                    & .el-pager{
+                        & li:not(.disabled).active {
+                            color: #fff;
+                            background-color: $table-icon-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

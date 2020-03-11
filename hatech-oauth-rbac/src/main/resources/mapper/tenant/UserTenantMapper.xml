@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.tenant.mapper.IUserTenantMapper">
+
+    <!-- 查询所有可用的数据源 -->
+    <select id="findByUsername" resultType="cn.com.hatechframework.server.tenant.po.UserTenantPO">
+        select * from tenant_user where username = #{username}
+    </select>
+
+</mapper>

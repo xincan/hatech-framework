@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.com.hatechframework</groupId>
+        <artifactId>hatech-framework</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../hatech-framework/pom.xml</relativePath>
+    </parent>
+
+    <groupId>cn.com.hatechframework</groupId>
+    <artifactId>hatech-oauth-server</artifactId>
+    <name>hatech-oauth-server</name>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>hatech-oauth-server认证中心微服务</description>
+
+    <dependencies>
+
+        <!-- 集成springboot测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 集成springboot响应式编程 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 集成声明式事务OpenFeign依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- 集成eureka注册器依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <!-- 集成oauth认证授权依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
+
+        <!-- 集成同创数据处理依赖 -->
+        <dependency>
+            <groupId>cn.com.hatechframework.common</groupId>
+            <artifactId>hatech-common-data-starter</artifactId>
+        </dependency>
+
+        <!-- 集成同创通用工具处理依赖 -->
+        <dependency>
+            <groupId>cn.com.hatechframework.common</groupId>
+            <artifactId>hatech-common-utils-starter</artifactId>
+        </dependency>
+
+        <!-- 集成通用实体类工具包依赖 -->
+        <dependency>
+            <groupId>cn.com.hatechframework.common</groupId>
+            <artifactId>hatech-common-entity-starter</artifactId>
+        </dependency>
+
+        <!-- 集成lombok依赖 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- 集成RESTFUL API文档插件依赖 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+
+        <!-- 集成swagger-bootstrap-ui自定义文档插件依赖 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+        </dependency>
+
+        <!-- 集成服务监控 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

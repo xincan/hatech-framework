@@ -1,0 +1,82 @@
+
+/**
+ * 导入函数工具类
+ */
+@import "mixin/mixin";
+
+#navigation {
+    & .is-hide {
+        max-height: 0;
+        @include hatech-transition(.3s);
+        overflow: hidden;
+    }
+    & .is-show {
+        max-height: 400px;
+        @include hatech-transition(1s);
+        overflow: hidden;
+    }
+    font-size: 12px;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    & li {
+        list-style: none;
+        & i {
+            font-size: 16px;
+        }
+    }
+
+    & ul {
+        width: 182px;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        & li {
+            clear: both;
+            cursor: pointer;
+            margin-top: 1px;
+            &:first-child {
+              margin-top: 0px;
+            }
+            &.active {
+                background: $hatech-left-nav-first-color;
+                &:hover {
+                    background: $hatech-left-nav-first-color;
+                }
+            }
+            &:hover {
+                background: $hatech-left-nav-first-color;
+            }
+            & > span {
+                position: relative;
+                display: inline-block;
+                line-height: 30px;
+                padding-left: 10px;
+                color: white;
+                &:nth-child(2) {
+                    float: right;
+                    margin-right: 10px;
+                }
+                & .caret {
+                    position: absolute;
+                    right: -10px;
+                    top: 7px;
+                    color: $hatech-left-nav-choose-color;
+                }
+            }
+            & div.child ul li {
+                padding-left: 20px;
+                cursor: pointer;
+                &:hover {
+                    background: $hatech-left-nav-child-color;
+                }
+                &.active {
+                    background: $hatech-left-nav-child-color;
+                }
+            }
+        }
+    }
+}

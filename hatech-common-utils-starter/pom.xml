@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.com.hatechframework</groupId>
+        <artifactId>hatech-framework</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../hatech-framework/pom.xml</relativePath>
+    </parent>
+
+    <groupId>cn.com.hatechframework.common</groupId>
+    <artifactId>hatech-common-utils-starter</artifactId>
+    <name>hatech-common-utils-starter</name>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>创建同创应用系统通用工具集</description>
+
+    <dependencies>
+
+        <!-- 定义swagger核心注解插件依赖 -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <!-- 集成orika-core实体类转换依赖 -->
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+        </dependency>
+
+        <!--集成fastjson工具类依赖-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- 集成自定义token解析依赖 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-release</id>
+            <name>admin</name>
+            <!--<url>http://localhost:8081/repository/nexus-releases/</url>-->
+            <!--<url>http://20t71z3582.iask.in:38459/repository/nexus-releases/</url>-->
+            <url>http://git.hatech.com.cn:8087/repository/nexus-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>admin</name>
+            <!--<url>http://localhost:8081/repository/nexus-snapshots/</url>-->
+            <!--<url>http://20t71z3582.iask.in:38459/repository/nexus-snapshots/</url>-->
+            <url>http://git.hatech.com.cn:8087/repository/nexus-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

@@ -1,0 +1,144 @@
+
+@import "./mixin/mixin";
+
+@import "./element-ui";
+
+html{
+  width: 100%;
+  height: 100%;
+}
+body{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  overflow: hidden;
+}
+
+#hatech{
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * 系统十二宫格布局设定
+ */
+@for $i from 1 through 12 {
+  .hatech-cell-#{$i} {
+    width: calc((100% / 12 * #{$i} - 5px * 2));
+  }
+}
+
+/**
+ * 系统消息提示背景颜色设定
+ */
+@for $i from 1 through length($hatech-option-color) {
+  $item: nth($hatech-option-color, $i);
+  .hatech-#{map_get($item, name)} {
+    background-color: map_get($item, color);
+  }
+}
+
+/**
+ * 表格数据格式化时，鼠标悬浮样式（不带小手样式）
+ */
+.hatech-fmt{
+  @include table-data-formatter(auto);
+}
+
+/**
+ * 表格数据格式化时，鼠标悬浮样式（带小手样式）
+ */
+.hatech-fmt-hand{
+  @include table-data-formatter(pointer);
+}
+
+/**
+ * 表格数据格式化时，按钮开启
+ */
+.hatech-fmt-enable {
+  @include hatech-fmt-is-enable(right);
+
+}
+
+/**
+ * 表格数据格式化时，按钮关闭
+ */
+.hatech-fmt-disable {
+  @include hatech-fmt-is-enable(left);
+}
+
+.hatech-panel {
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: calc(100% - 4px);
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ws--box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  & .hatech-pmw {
+    margin: 5px 0px 5px 0px!important;
+    width: 100%;
+    &:first-child{
+      margin: -5px 0px 5px 0!important;
+    }
+  }
+  & .hatech-margin {
+    margin-top: 10px!important;
+    margin-bottom: 10px!important;
+  }
+  & .hatech-row {
+    display: inline-block;
+    width: 100%;
+    height: calc(100% - 5px);
+    padding-top: 5px;
+    & .hatech-item {
+      display: inline-block;
+      height: 100%;
+      margin: 0px 5px;
+      float: left;
+      @include box-border-sizing();
+      &:last-child{
+        margin-right: 0px;
+      }
+      & .hatech-item-header {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        margin: 0;
+        color: $system-color-font;
+        background-color: $system-color-panel-title;
+        & .hatech-item-header-title {
+          float: left;
+          & > span {
+            margin: 0px 5px;
+              & > i {
+                margin-right: 5px;
+              }
+          }
+        }
+        & .hatech-item-header-option{
+          float: right;
+          margin-right: 5px;
+          & > span {
+            cursor: pointer;
+            margin-right: 5px;
+          }
+        }
+      }
+      & .hatech-item-body {
+        box-sizing: border-box;
+        width: 100%;
+        height: calc(100% - 35px);
+        padding: 0;
+        float: left;
+      }
+    }
+  }
+}

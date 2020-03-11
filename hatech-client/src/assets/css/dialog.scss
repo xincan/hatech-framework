@@ -1,0 +1,54 @@
+
+/**
+ * 导入函数工具类
+ */
+@import "mixin/mixin";
+
+.hatech-dialog{
+
+    & /deep/ .el-dialog {
+
+        & .hatech-top-line {
+            border-top: 1px solid $hatech-line-color;
+            height: 15px;
+        }
+        & .hatech-bottom-line {
+            border-bottom: 1px solid $hatech-line-color;
+            height: 0px;
+            margin-bottom: 5px;
+        }
+
+        & .el-dialog__header {
+            padding: 10px 0px 5px 10px;
+            & .el-dialog__title {
+                font-size: 16px;
+            }
+        }
+        & .el-dialog__body {
+            padding: 0px 0px;
+
+            & .el-form-item {
+                margin-bottom: 15px;
+            }
+            & .el-form-item__error {
+                padding-top: 2px;
+            }
+            & .el-input__inner{
+                height: 35px;
+                line-height: 35px;
+                padding: 0 5px;
+                cursor: default;
+                &:hover{
+                    cursor: default!important;
+                }
+            }
+        }
+        & .el-dialog__footer {
+            padding: 10px 20px 10px;
+        }
+        & .el-dialog__headerbtn {
+            top: 15px;
+            right: 15px;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.hatechframework.server.mapper.client.IClientDetailMapper">
+
+    <resultMap id="MybatisClientDetails" type="cn.com.hatechframework.server.po.MybatisClientDetailsPO">
+        <id column="client_id" jdbcType="VARCHAR" property="clientId"/>
+        <id column="resource_ids" jdbcType="VARCHAR" property="resourceIds"/>
+        <id column="client_secret" jdbcType="VARCHAR" property="clientSecret"/>
+        <id column="scope" jdbcType="VARCHAR" property="scope"/>
+        <id column="authorized_grant_types" jdbcType="VARCHAR" property="authorizedGrantTypes"/>
+        <id column="web_server_redirect_uri" jdbcType="VARCHAR" property="webServerRedirectUri"/>
+        <id column="authorities" jdbcType="VARCHAR" property="authorities"/>
+        <id column="access_token_validity" jdbcType="INTEGER" property="accessTokenValidity"/>
+        <id column="refresh_token_validity" jdbcType="INTEGER" property="refreshTokenValidity"/>
+        <id column="additional_information" jdbcType="VARCHAR" property="additionalInformation"/>
+        <id column="autoapprove" jdbcType="VARCHAR" property="autoapprove"/>
+    </resultMap>
+
+</mapper>

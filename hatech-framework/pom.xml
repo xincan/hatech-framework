@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.com.hatechframework</groupId>
+    <artifactId>hatech-framework</artifactId>
+    <name>hatech-framework</name>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <description>hatech-framework架构</description>
+
+    <modules>
+
+        <!-- 同创通用实体工具类 -->
+        <module>../hatech-common-entity-starter</module>
+
+        <module>../hatech-common-utils-starter</module>
+
+        <!-- 同创数据处理工具类 -->
+        <module>../hatech-common-data-starter</module>
+
+        <!-- 服务注册与发现中心微服务 -->
+        <module>../hatech-center-eureka</module>
+
+        <!-- 网关微服务 -->
+        <module>../hatech-center-gateway</module>
+
+        <!-- 统一鉴权微服务 -->
+        <module>../hatech-oauth-server</module>
+
+        <!-- 鉴权中心微服务 -->
+        <module>../hatech-oauth-rbac</module>
+
+        <!-- 日志中心微服务 -->
+        <module>../hatech-center-log</module>
+
+        <!-- 服务监控微服务 -->
+        <module>../hatech-center-admin</module>
+    </modules>
+
+
+    <!-- 公共版本号统一存放处，便于以后修改，全局替换版本号 -->
+    <properties>
+        <!-- springboot-maven工具包版本配置 -->
+        <spring-boot-maven-plugin.version>2.0.0.RELEASE</spring-boot-maven-plugin.version>
+        <!-- 同创通用实体类工具包版本配置 -->
+        <hatech-common-entity-starter.version>0.0.1-SNAPSHOT</hatech-common-entity-starter.version>
+        <!-- 数据处理版本配置 -->
+        <hatech-common-data-starter.version>0.0.1-SNAPSHOT</hatech-common-data-starter.version>
+        <!-- 同创通用工具包版本配置 -->
+        <hatech-common-utils-starter.version>0.0.1-SNAPSHOT</hatech-common-utils-starter.version>
+        <!-- 构建项目编码格式版本配置 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- java JDK版本配置 -->
+        <java.version>1.8</java.version>
+        <!-- spring-cloud版本配置 -->
+        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <!-- spring-cloud版本配置 -->
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+        <!-- mysql数据库连接配置 -->
+        <mysql-connector-java.version>8.0.18</mysql-connector-java.version>
+        <!-- 阿里巴巴监听版本配置 -->
+        <druid-spring-boot-starter.version>1.1.21</druid-spring-boot-starter.version>
+        <!-- MP版本配置 -->
+        <mybatis-plus-boot-starter.version>3.2.0</mybatis-plus-boot-starter.version>
+        <!-- orika-core实体类转换版本配置 -->
+        <orika-core.version>1.5.4</orika-core.version>
+        <!-- fastjson工具类配置 -->
+        <fastjson.version>1.2.62</fastjson.version>
+        <!-- 日志系统版本配置 -->
+        <lombok.version>1.18.4</lombok.version>
+        <!-- 斯瓦格api版本配置 -->
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <!-- 斯瓦格注解包版本配置 -->
+        <swagger-annotations.verion>1.5.20</swagger-annotations.verion>
+        <!-- 斯瓦格UI版本配置 -->
+        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+        <!-- sharding-jdbc版本配置 -->
+        <sharding-jdbc.version>4.0.0-RC2</sharding-jdbc.version>
+        <!-- seata结合spring的版本配置 -->
+        <spring.seata.version>2.2.0.RELEASE</spring.seata.version>
+        <!-- seata版本配置 -->
+        <seata.version>1.1.0</seata.version>
+        <!-- jjwt自定义token解析版本配置 -->
+        <jjwt.token.wersion>0.9.1</jjwt.token.wersion>
+        <!-- 阿里巴巴excel解析版本配置 -->
+        <easyexcel.version>2.1.6</easyexcel.version>
+        <!-- springboot admin服务监控版本配置 -->
+        <springboot.admin.version>2.2.1</springboot.admin.version>
+    </properties>
+
+    <!-- 定义依赖 -->
+    <dependencyManagement>
+
+        <dependencies>
+
+            <!-- 定义spring-boot版本依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 定义spring-cloud版本依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 定义同创数据处理依赖 -->
+            <dependency>
+                <groupId>cn.com.hatechframework.common</groupId>
+                <artifactId>hatech-common-data-starter</artifactId>
+                <version>${hatech-common-data-starter.version}</version>
+            </dependency>
+
+            <!-- 定义同创通用工具处理依赖 -->
+            <dependency>
+                <groupId>cn.com.hatechframework.common</groupId>
+                <artifactId>hatech-common-utils-starter</artifactId>
+                <version>${hatech-common-utils-starter.version}</version>
+            </dependency>
+
+            <!-- 定义同创通用工具处理依赖 -->
+            <dependency>
+                <groupId>cn.com.hatechframework.common</groupId>
+                <artifactId>hatech-common-entity-starter</artifactId>
+                <version>${hatech-common-entity-starter.version}</version>
+            </dependency>
+
+            <!-- 定义优化mysql依赖 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <!-- 定义mybatis-plus依赖 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 定义阿里巴巴监听依赖 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 定义orika-core实体类转换依赖 -->
+            <dependency>
+                <groupId>ma.glasnost.orika</groupId>
+                <artifactId>orika-core</artifactId>
+                <version>${orika-core.version}</version>
+            </dependency>
+
+            <!-- 定义fastjson工具类依赖 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- 定义lombok依赖 -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- 定义RESTFUL API文档插件依赖 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox-swagger2.version}</version>
+            </dependency>
+
+            <!-- 定义swagger核心注解插件依赖 -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.verion}</version>
+            </dependency>
+
+            <!-- 定义swagger-bootstrap-ui自定义文档插件依赖 -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-bootstrap-ui.version}</version>
+            </dependency>
+
+            <!-- 定义sharding-jdbc依赖 -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-core</artifactId>
+                <version>${sharding-jdbc.version}</version>
+            </dependency>
+
+            <!-- 定义seata分布式事务依赖 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-seata</artifactId>
+                <version>${spring.seata.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.seata</groupId>
+                        <artifactId>seata-spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 定义seata为最新版本 -->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+
+            <!-- 定义自定义token解析依赖 -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.token.wersion}</version>
+            </dependency>
+
+            <!-- 定义阿里巴巴excel解析依赖 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!-- 定义springboot admin服务监控server端依赖 -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${springboot.admin.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-release</id>
+            <name>admin</name>
+            <!--<url>http://localhost:8081/repository/nexus-releases/</url>-->
+            <!--<url>http://20t71z3582.iask.in:38459/repository/nexus-releases/</url>-->
+			<url>http://git.hatech.com.cn:8087/repository/nexus-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>admin</name>
+            <!--<url>http://localhost:8081/repository/nexus-snapshots/</url>-->
+            <!--<url>http://20t71z3582.iask.in:38459/repository/nexus-snapshots/</url>-->
+			<url>http://git.hatech.com.cn:8087/repository/nexus-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>
