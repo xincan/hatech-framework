@@ -69,7 +69,7 @@
         <!-- orika-core实体类转换版本配置 -->
         <orika-core.version>1.5.4</orika-core.version>
         <!-- fastjson工具类配置 -->
-        <fastjson.version>1.2.62</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <!-- 日志系统版本配置 -->
         <lombok.version>1.18.4</lombok.version>
         <!-- 斯瓦格api版本配置 -->
