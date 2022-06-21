@@ -61,7 +61,7 @@
         <!-- spring-cloud版本配置 -->
         <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
         <!-- mysql数据库连接配置 -->
-        <mysql-connector-java.version>8.0.18</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
         <!-- 阿里巴巴监听版本配置 -->
         <druid-spring-boot-starter.version>1.1.21</druid-spring-boot-starter.version>
         <!-- MP版本配置 -->
